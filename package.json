@@ -7,8 +7,8 @@
     "build": "rimraf ./build && tsc -p tsconfig.json && webpack",
     "pack": "webpack",
     "start": "tsc -w & webpack serve",
-    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "postinstall": "npm run build"
+    "ngrok":"ngrok http --host-header=rewrite 8080",
+    "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@types/inversify": "^2.0.33",
