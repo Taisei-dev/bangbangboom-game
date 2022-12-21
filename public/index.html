@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Bang player</title>
 </head>
 <body>
     <div id="app"></div>
@@ -13,19 +13,19 @@
         async function loadMap() {
             return fetch('/assets/chart.json')
                     .then(res=>res.json())
-                    .then(json=>json.chartData.special)
+                    .then(json=>json.chartData.expert)
         }
         let GameConfig = {
-          judgeOffset: 20,
-          visualOffset: 10,
+          judgeOffset: 0,
+          visualOffset: 0,
           speed: 10.5,
           resolution: 1,
           noteScale: 1,
-          barOpacity: 0.7,
-          backgroundDim: 0.7,
+          barOpacity: 1,
+          backgroundDim: 0.8,
           effectVolume: 1,
           showSimLine: true,
-          laneEffect: true,
+          laneEffect: false,
           mirror: false,
           beatNote: true
         }
@@ -41,6 +41,8 @@
         function GameStart() {
           const div = document.getElementById("app")
           const canvas = document.createElement("canvas")
+          canvas.width=1272
+          canvas.height=1080
           canvas.style.height = "100%"
           canvas.style.width = "100%"
           div.appendChild(canvas)
