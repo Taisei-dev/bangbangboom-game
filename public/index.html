@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="./bangbangboom-game.js"></script>
+    <script>
+        async function loadMap() {
+            return fetch('/assets/chart.json')
+                    .then(res=>res.json())
+                    .then(json=>json.chartData.special)
+        }
+        let GameConfig = {
+          judgeOffset: 20,
+          visualOffset: 10,
+          speed: 10.5,
+          resolution: 1,
+          noteScale: 1,
+          barOpacity: 0.7,
+          backgroundDim: 0.7,
+          effectVolume: 1,
+          showSimLine: true,
+          laneEffect: true,
+          mirror: false,
+          beatNote: true
+        }
+      
+        GameLoadConfig = {
+          mapContent: loadMap,
+          musicSrc: "/assets/audio.mp3",
+          backgroundSrc: "/assets/cover.png",
+          skin: "/assets/skin04",
+          songName: "Ringing Bloom - Hard"
+        }
+      
+        function GameStart() {
+          const div = document.getElementById("app")
+          const canvas = document.createElement("canvas")
+          canvas.style.height = "100%"
+          canvas.style.width = "100%"
+          div.appendChild(canvas)
+      
+          const game = new BangGame.Game(canvas, GameConfig, GameLoadConfig)
+          game.start()
+          game.ondestroyed = () => {
+            div.removeChild(canvas)
+          }
+        }
+        GameStart()
+      </script>
+</body>
+</html>
