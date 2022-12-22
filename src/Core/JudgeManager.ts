@@ -73,7 +73,7 @@ export class JudgeManager extends AbsctractJudgeManager {
 
         state.on.judge.add((remove, note) => {
             if (state.ended) remove()
-            if (note.judge && note.judge !== "bad") {
+            if (note.judge && note.judge !== "bad" && note.judge !== "miss") {
                 if (note.type === "flick" || note.type === "flickend") {
                     state.on.soundEffect.emit("flick", 0)
                 } else {
@@ -124,7 +124,7 @@ export class JudgeManager extends AbsctractJudgeManager {
                         holdingFlicks.delete(x.pointerId!)
                         x.pointerId = undefined
                     }
-
+                    console.log(pool)
                     state.on.judge.emit(x)
                     judgedNotes.add(x)
                 }
@@ -132,6 +132,7 @@ export class JudgeManager extends AbsctractJudgeManager {
 
             if (judgedNotes.size > 0) {
                 pool = pool.filter(x => !judgedNotes.has(x))
+                console.log(pool)
                 judgedNotes.clear()
             }
 
