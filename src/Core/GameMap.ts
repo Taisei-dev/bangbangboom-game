@@ -115,6 +115,9 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
             const l = slidenotes.get(n.slideid)
             if (!l) throw new Error("Never happens")
             if (l.length < 2) throw new Error("Slide can not have less than 2 notes")
+            // slides may includes overlapping
+            const m = slidenotes.get(n.slideid - 1)
+            if (m && !comparator(m[0], l[0])) continue
             if (n === l[0]) {
                 notes.push({ type: "slidestart", parent: s, time: n.time, lane: n.lane })
                 const start = findex(notes, -1) as SlideStart

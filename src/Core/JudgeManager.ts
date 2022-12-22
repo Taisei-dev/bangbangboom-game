@@ -114,8 +114,10 @@ export class JudgeManager extends AbsctractJudgeManager {
                     if (x.type === "slidestart") {
                         x.parent.nextJudgeIndex = 1
                     } else if (x.type !== "single" && x.type !== "flick") {
+                        //slideamong slideend flickend
                         x.parent.nextJudgeIndex!++
                         if (x.type !== "slideamong") {
+                            //slideend flickend
                             holdingSlides.delete(x.parent.pointerId!)
                             holdingFlicks.delete(x.parent.pointerId!)
                             x.parent.pointerId = undefined
@@ -124,7 +126,6 @@ export class JudgeManager extends AbsctractJudgeManager {
                         holdingFlicks.delete(x.pointerId!)
                         x.pointerId = undefined
                     }
-                    console.log(pool)
                     state.on.judge.emit(x)
                     judgedNotes.add(x)
                 }
@@ -132,7 +133,6 @@ export class JudgeManager extends AbsctractJudgeManager {
 
             if (judgedNotes.size > 0) {
                 pool = pool.filter(x => !judgedNotes.has(x))
-                console.log(pool)
                 judgedNotes.clear()
             }
 
@@ -260,7 +260,7 @@ export class JudgeManager extends AbsctractJudgeManager {
                     if (canDown.length <= 0) break
                     canDown = canDown.sort(comparator)
                     const n = canDown[0]
-                    const j = getJudgeFunction(n)(mt - n.time)
+                    const j = getJudgeFunction(n)(mt - n.time) as Judge
                     if (j !== undefined) {
                         downHandled = true
                         if (n.type !== "flick" && n.type !== "flickend") {
@@ -335,7 +335,7 @@ export class JudgeManager extends AbsctractJudgeManager {
                     if (f) {
                         if (distance2(f.start, pointer) > JudgeOffset.flickOutDis * JudgeOffset.flickOutDis) {
                             const jt = f.note.type === "flick" ? f.start.time : mt
-                            const j = getJudgeFunction(f.note)(jt - f.note.time)
+                            const j = getJudgeFunction(f.note)(jt - f.note.time) as Judge
                             if (j !== undefined) {
                                 if (f.note.type === "flickend") {
                                     f.note.parent.pointerId = undefined
