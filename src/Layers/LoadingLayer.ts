@@ -99,7 +99,7 @@ export class LoadingLayer extends Container {
             if (progress > 0.04 && lastProg !== progress) {
                 lastProg = progress
                 bar.clear()
-                    .beginFill(0xe93f5f)
+                    .beginFill(0x0eb6a8)
                     .drawRoundedRect(0, 0, 480 * progress, 18, 8)
                     .endFill()
             }

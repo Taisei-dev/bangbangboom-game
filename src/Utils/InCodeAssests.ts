@@ -4,4 +4,4 @@ const LoadingBackgroundUrl =
 export const LoadingBackground = document.createElement("img")
 LoadingBackground.src = LoadingBackgroundUrl
 
-export const LoadingMessages = ["Loading...", "???", "在加载了", "bangbangboom 炸了多久了", "小鱼干 -20..鱼干不足"]
+export const LoadingMessages = ["NOW LOADING..."]

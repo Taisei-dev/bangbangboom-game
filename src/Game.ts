@@ -99,8 +99,8 @@ export class Game {
     }
 
     private resize() {
-        const h = window.innerHeight
-        const w = window.innerWidth
+        const h = window.innerHeight * 2
+        const w = window.innerWidth * 2
         const s = this.renderer.screen
         if (h !== s.height || w !== s.width || !this.events.Resize.prevArgs) {
             this.renderer.resize(w, h)
