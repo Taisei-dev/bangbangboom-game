@@ -1,35 +1,33 @@
 const path = require("path")
 
 module.exports = {
-    // モードの設定
     mode: "development",
 
-    // エントリーポイントの設定
-    entry: `./build/index.js`,
+    entry: `./src/index.ts`,
 
-    // ファイルの出力設定
+    // ライブラリの出力設定
     output: {
-        // 出力するファイル名
         filename: "bangbangboom-game.js",
-        library:{
-            name:'BangGame',
-            type:'umd'
+        library: {
+            name: "BangGame",
+            type: "umd",
         },
-        //  出力先のパス
         path: path.join(__dirname, "public"),
     },
+    devtool: "source-map",
     devServer: {
         static: "public",
         open: true,
     },
-    module:{
-        rules:[
+    module: {
+        rules: [
             {
-                test:/\.js$/,
-                enforce:'pre',
-                use:['source-map-loader'],
+                test: /\.ts$/,
+                use:["ts-loader"],
             },
         ],
     },
-    ignoreWarnings: [/Failed to parse source map/],
+    resolve: {
+        extensions: [".js", ".json", ".ts"],
+    },
 }

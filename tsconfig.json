@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "inlineSourceMap": true,
+        "sourceMap": true,
         "target": "es2020",
         "module": "es2020",
         "moduleResolution": "node",
@@ -19,14 +19,8 @@
         "strictNullChecks": true,
         "esModuleInterop": true,
 
-        "outDir": "./build",
-        "declaration": true,
     },
     "include": [
         "./**/*.ts"
     ],
-    "exclude": [
-        "build",
-        "node_modules"
-    ]
 }

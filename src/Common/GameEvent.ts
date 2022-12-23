@@ -4,9 +4,9 @@ type Listener<Args extends any[]> = (remove: () => void, ...args: Args) => any
 
 export class GameEvent<Args extends any[] = any[]> {
     private listeners = new Set<Listener<Args>>()
-    prevArgs: Args = (null as any) as Args
+    prevArgs: Args = null as any as Args
 
-    emit(...args: Args) {
+    emit(...args: Args): void {
         const list = setItems(this.listeners)
         for (const listener of list) {
             listener(() => this.listeners.delete(listener), ...args)

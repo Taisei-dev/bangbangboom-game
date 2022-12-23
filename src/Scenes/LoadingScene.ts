@@ -52,7 +52,7 @@ async function mapContentMiddleWare(resource: LoaderResource, next: () => void) 
         resource.data = map
         resource.complete()
     } catch (err) {
-        resource.error = err
+        resource.error = err as Error
         resource.abort("Load error")
     } finally {
         next()
