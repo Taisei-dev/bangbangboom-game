@@ -10,6 +10,7 @@ export class BackgroundLayer extends FixRatioContainer {
         super(0, 0)
 
         const bg = new Sprite(resources.background?.texture)
+        bg.scale.set(0.4)
         bg.alpha = 1 - config.backgroundDim
         this.setInit(bg.width, bg.height)
         {

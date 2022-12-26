@@ -3,8 +3,8 @@ export const LayerHeight = 720
 
 export const CenterX = LayerWidth / 2
 
-export const LaneInfY = -5
-export const LaneBottomY = LayerHeight * 0.85
+export const LaneInfY = -35
+export const LaneBottomY = LayerHeight * 0.9
 
 export const LaneWidth = 0.12 * LayerWidth
 

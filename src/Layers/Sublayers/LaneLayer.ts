@@ -9,7 +9,8 @@ export class LaneLayer extends Container {
         super()
 
         const lane = new Sprite(resources.game.textures!.rhythm_line)
-        lane.anchor.set(0.5, 1)
+        lane.scale.set(0.8)
+        lane.anchor.set(0.5, 0.7)
         lane.position.set(CenterX, LaneBottomY)
         this.addChild(lane)
 
