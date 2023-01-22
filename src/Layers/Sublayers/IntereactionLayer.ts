@@ -9,7 +9,7 @@ export class IntereactionLayer extends Container {
     constructor(config: GameConfig, state: GameState) {
         super()
 
-        const hw = 4.5 * LaneWidth
+        const hw = 7 * LaneWidth
         const h = LayerHeight * 1.2
 
         const rect = new Graphics()
@@ -27,10 +27,9 @@ export class IntereactionLayer extends Container {
         const getlane = (x: number, y: number) => {
             if (y < 0) return -1
             const pm = x >= 0 ? 1 : -1
-            let dl = (Math.abs(x) + LaneWidth / 2) / LaneWidth
-            if (dl >= 5) return -1
-            if (dl >= 4) dl = 3.5
-            return 3 + Math.floor(dl) * pm
+            let dl = Math.abs(x)  / LaneWidth
+            if (dl >= 7) return -1
+            return 6.5 + pm / 2 + Math.floor(dl) * pm
         }
 
         const typemap: any = {

@@ -12,7 +12,7 @@ export class SlideNoteSprite extends Sprite {
     }
 
     setTexture(lane: number) {
-        this.texture = this.resource.game.textures!["slide_" + lane]
+        this.texture = this.resource.game.textures!["slide"]
     }
 
     note?: SlideStart | SlideEnd

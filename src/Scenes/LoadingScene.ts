@@ -75,7 +75,7 @@ export class LoadingScene extends Container {
 
         loader.add("music", config.musicSrc, { loadType: LoaderResource.LOAD_TYPE.AUDIO })
         if (config.backgroundSrc)
-            loader.add("background", config.backgroundSrc, { loadType: LoaderResource.LOAD_TYPE.IMAGE })
+            loader.add("background", config.backgroundSrc, { loadType: LoaderResource.LOAD_TYPE.IMAGE })         
         loader.add("map", mapContentLoadConfig.url, { loadType: LoaderResource.LOAD_TYPE.XHR })
         for (const key in jsonNames) loader.add(key, `${config.skin}/${jsonNames[key as keyof typeof jsonNames]}`)
         for (const key in soundNames) loader.add(key, `${config.skin}/${soundNames[key as keyof typeof soundNames]}`)

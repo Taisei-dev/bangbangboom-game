@@ -13,7 +13,7 @@
         async function loadMap() {
             return fetch('/assets/chart.json')
                     .then(res=>res.json())
-                    .then(json=>json.chartData.special)
+                    .then(json=>json.chartData.hard)
         }
         let GameConfig = {
           judgeOffset: 0,
@@ -28,13 +28,15 @@
           laneEffect: false,
           mirror: false,
           beatNote: true,
+          debug:true
         }
         GameLoadConfig = {
           mapContent: loadMap,
           musicSrc: "/assets/audio.mp3",
-          backgroundSrc: "/assets/liveBG_normal.png",
+          loadingBackgroundSrc: "/assets/loadBG.png",
+          backgroundSrc: "/assets/liveBG.png",
           coverSrc: "/assets/cover.png",
-          skin: "/assets/sekai01",
+          skin: "/assets/local/sekai02",
           songName: "Ringing Bloom - Hard"
         }
       

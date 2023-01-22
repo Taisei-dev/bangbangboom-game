@@ -19,7 +19,7 @@ export class FlickNoteSprite extends Sprite {
     private top: Sprite
 
     setTexture(lane: number) {
-        this.texture = this.resource.game.textures!["flick_" + lane]
+        this.texture = this.resource.game.textures!["flick"]
     }
 
     note?: Flick | SlideFlickEnd

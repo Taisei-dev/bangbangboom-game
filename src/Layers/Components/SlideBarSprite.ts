@@ -11,6 +11,7 @@ import { Matrix } from "pixi.js"
 export class SlideBarSprite extends Sprite2d {
     constructor(resources: Resources, private helper: NoteHelper) {
         super(resources.game.textures?.slide_bar)
+        this.scale.set(0.2)
         this.anchor.set(0.5, 1)
         this.visible = false
     }

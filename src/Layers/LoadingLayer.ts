@@ -1,7 +1,7 @@
 import { FixRatioContainer } from "../Common/FixRatioContainer"
 import { injectable } from "inversify"
 import { LayerWidth, LayerHeight } from "../Core/Constants"
-import { Text, Container, TilingSprite, Texture, Graphics } from "pixi.js"
+import { Text, Container, Sprite, Texture, Graphics } from "pixi.js"
 import { LoadingBackground, LoadingMessages } from "../Utils/InCodeAssests"
 import { GlobalEvents } from "../Utils/SymbolClasses"
 import {
@@ -49,8 +49,10 @@ export class LoadingLayer extends Container {
     constructor(events: GlobalEvents, config: GameLoadConfig) {
         super()
 
-        const backtexture = Texture.from(LoadingBackground)
-        const back = new TilingSprite(backtexture, ...events.Resize.prevArgs)
+        const backimage=Texture.from(config.loadingBackgroundSrc)
+        const back=new Sprite(backimage)
+        console.log(backimage.width)
+        back.scale.set(2.2)
         this.addChild(back)
 
         const container = new FixRatioContainer(LayerWidth, LayerHeight)
@@ -58,7 +60,7 @@ export class LoadingLayer extends Container {
 
         const text = new Text(LoadingMessages[0], {
             fontSize: 72,
-            fill: "white",
+            fill: "black",
         })
         text.position.set(400, 330)
         text.scale.set(0.5)
@@ -75,22 +77,11 @@ export class LoadingLayer extends Container {
 
         const textanim = this.setTextAnim(text, events.Update)
 
-        events.Resize.add((remove, w, h) => {
-            if (!this.parent) return remove()
-
-            back.width = w
-            back.height = h
-
-            back.tileScale.set(Math.max(w, h) / 1000)
-            container.resize(w, h)
-        })
 
         let lastProg = 0
         events.Update.add((remove, dt) => {
             if (!this.parent) return remove()
 
-            back.tilePosition.x += dt * 20
-            back.tilePosition.y += dt * 10
 
             textanim.update(dt)
 

@@ -3,15 +3,15 @@ export const LayerHeight = 720
 
 export const CenterX = LayerWidth / 2
 
-export const LaneInfY = -35
-export const LaneBottomY = LayerHeight * 0.9
+export const LaneInfY = -5
+export const LaneBottomY = LayerHeight * 0.74
 
-export const LaneWidth = 0.12 * LayerWidth
+export const LaneWidth = 0.06 * LayerWidth
 
 export const LaneCenterXs: number[] = []
 
-for (let i = -3; i < 4; i++) {
-    LaneCenterXs.push(CenterX + i * LaneWidth)
+for (let i = -6; i < 6; i++) {
+    LaneCenterXs.push(CenterX + i * LaneWidth + LaneWidth / 2)
 }
 
 export const FarLineZ = 20

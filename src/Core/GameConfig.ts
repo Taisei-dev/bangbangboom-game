@@ -63,6 +63,7 @@ type LazyRawMap = RawMap | Promise<RawMap>
 export class GameLoadConfig {
     musicSrc = ""
     mapContent = null as LazyRawMap | (() => LazyRawMap) | null
+    loadingBackgroundSrc = ""
     backgroundSrc = ""
     coverSrc = ""
     skin = ""

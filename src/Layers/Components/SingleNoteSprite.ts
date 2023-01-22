@@ -13,8 +13,9 @@ export class SingleNoteSprite extends Sprite {
     }
 
     setTexture(lane: number) {
-        if (!this.note?.onbeat && this.config.beatNote) this.texture = this.resource.game.textures!["gray_" + lane]
-        else this.texture = this.resource.game.textures!["single_" + lane]
+        // if (!this.note?.onbeat && this.config.beatNote) this.texture = this.resource.game.textures!["gray_" + lane]
+        // else this.texture = this.resource.game.textures!["single_" + lane]
+        this.texture = this.resource.game.textures!["single"]
     }
 
     note?: Single
