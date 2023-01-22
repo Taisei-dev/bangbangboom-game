@@ -1,13 +1,14 @@
 import * as RawMap from "./RawMap"
 import { findex } from "../Utils/Utils"
-import { Judge } from "./Constants"
+import { Judge, Lane } from "./Constants"
+export { Lane } from "./Constants"
 import { NoteBase } from "./RawMap"
 
 export type JudgePoint = {
     /** real time from music start */
     time: number
     /** the first on the left is 0 */
-    lane: number
+    lane: Lane
 
     // judgeType?: {
     //     canDown: () => boolean
@@ -81,7 +82,7 @@ export type GameMap = {
 function comparator(a: NoteBase, b: NoteBase) {
     const dt = a.time - b.time
     if (dt) return dt
-    return a.lane - b.lane
+    return a.lane.l - b.lane.l
 }
 
 export function fromRawMap(map: RawMap.RawMap): GameMap {

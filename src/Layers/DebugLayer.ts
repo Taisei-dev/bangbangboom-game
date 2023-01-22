@@ -3,7 +3,8 @@ import {
     LayerWidth,
     LayerHeight,
     LaneBottomY,
-    LaneCenterXs,
+    Lane,
+    LaneCenterX,
     LaneInfY,
     CenterX,
     LaneWidth,
@@ -41,14 +42,14 @@ export class DebugLayer extends FixRatioContainer {
 
         const centerLines = new Graphics()
         centerLines.lineStyle(2, 0x004422)
-        LaneCenterXs.forEach(x => {
-            centerLines.moveTo(CenterX, LaneInfY).lineTo(x, LaneBottomY)
-        })
+        for (let x = -6; x < 6; x++) {
+            centerLines.moveTo(CenterX, LaneInfY).lineTo(LaneCenterX({ l: x, r: x } as Lane), LaneBottomY)
+        }
         this.addChild(centerLines)
 
         const borderLines = new Graphics()
         borderLines.lineStyle(2, 0x00aa44)
-        const borderXs = LaneCenterXs.map(x => x - LaneWidth / 2)
+        const borderXs = [...Array(12).keys()].map(x => LaneCenterX(x) - LaneWidth / 2)
         borderXs.push(borderXs[borderXs.length - 1] + LaneWidth)
         borderXs.forEach(x => {
             borderLines.moveTo(CenterX, LaneInfY).lineTo(x, LaneBottomY)

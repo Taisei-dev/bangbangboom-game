@@ -2,7 +2,7 @@ import { Container, Sprite, Texture } from "pixi.js"
 import { injectable } from "inversify"
 import { Resources, GlobalEvents } from "../../Utils/SymbolClasses"
 import { AnimationManager, CreatePixiPropSetter } from "../../Common/Animation/Animation"
-import { LaneBottomY, LaneCenterXs } from "../../Core/Constants"
+import { LaneBottomY, LaneCenterX } from "../../Core/Constants"
 import { GameState } from "../../Core/GameState"
 import { GameConfig } from "../../Core/GameConfig"
 
@@ -58,11 +58,11 @@ export class LaneEffectLayer extends Container {
 
         const list = [0.166, 0.23, 0.36, 0.5]
 
-        const effects = [0, 1, 2, 3, 4, 5, 6].map(x => {
+        const effects = [...Array(12).keys()].map(x => {
             const i = 3 - Math.abs(x - 3)
             const e = new LaneEffect(resources.game.textures!["bg_line" + i], x > 3)
             e.y = LaneBottomY
-            e.x = LaneCenterXs[x]
+            e.x = LaneCenterX(x)
             e.visible = false
             e.anchor.set(list[i], 1)
             return e
@@ -79,7 +79,10 @@ export class LaneEffectLayer extends Container {
         })
 
         state.on.judge.add((remove, n) => {
-            if (n.judge !== "miss") effects[n.lane].setAnim()
+            if (n.judge !== "miss")
+                for (let i = n.lane.l; i <= n.lane.r; i++) {
+                    effects[i].setAnim()
+                }
         })
 
         state.on.emptyTap.add((remove, l) => {

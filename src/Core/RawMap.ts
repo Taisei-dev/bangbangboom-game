@@ -1,10 +1,11 @@
 import ajv from "ajv"
+import { Lane } from "./Constants"
 
 export type NoteBase = {
     /** real time from music starts */
     time: number
-    /** left: 0 ---- right : 6 */
-    lane: number
+    /** left: 0 ---- right : 11 */
+    lane: Lane
 }
 
 export type Single = NoteBase & {
@@ -36,11 +37,19 @@ export type RawMap = {
 
 export const ValidateRawMap = ajv().compile({
     definitions: {
+        Lane: {
+            type: "object",
+            properties: {
+                l: { type: "integer", minimum: 0, maximum: 11 },
+                r: { type: "integer", minimum: 0, maximum: 11 },
+            },
+            required: ["l", "r"],
+        },
         NoteBase: {
             type: "object",
             properties: {
                 time: { type: "number", minimum: 0 },
-                lane: { type: "integer", minimum: 0, maximum: 6 },
+                lane: { $ref: "#/definitions/Lane" },
             },
             required: ["time", "lane"],
         },

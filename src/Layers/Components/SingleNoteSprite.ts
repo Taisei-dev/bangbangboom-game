@@ -1,6 +1,6 @@
 import { Sprite } from "pixi.js"
 import { Resources, NoteHelper } from "../../Utils/SymbolClasses"
-import { Single } from "../../Core/GameMap"
+import { Lane, Single } from "../../Core/GameMap"
 import { injectable } from "inversify"
 import { GameConfig } from "../../Core/GameConfig"
 
@@ -12,10 +12,9 @@ export class SingleNoteSprite extends Sprite {
         this.visible = false
     }
 
-    setTexture(lane: number) {
-        // if (!this.note?.onbeat && this.config.beatNote) this.texture = this.resource.game.textures!["gray_" + lane]
-        // else this.texture = this.resource.game.textures!["single_" + lane]
-        this.texture = this.resource.game.textures!["single"]
+    setTexture(lane: Lane) {
+        if (!this.note?.onbeat && this.config.beatNote) this.texture = this.resource.game.textures!["critical"]
+        else this.texture = this.resource.game.textures!["single"]
     }
 
     note?: Single
@@ -40,7 +39,7 @@ export class SingleNoteSprite extends Sprite {
 
         const p = this.helper.calc(this.note, musicTime)
         this.position.set(p.x, p.y)
-        this.helper.setScale(this, p.scale)
+        this.helper.setScale(this, p.scale, this.note.lane.r - this.note.lane.l)
 
         this.zIndex = p.scale
     }

@@ -4,7 +4,7 @@ import { injectable } from "inversify"
 import { GameConfig, staytime } from "../Core/GameConfig"
 import { JudgePoint } from "../Core/GameMap"
 import { projection } from "../Core/Projection"
-import { LaneCenterXs } from "../Core/Constants"
+import { LaneCenterX } from "../Core/Constants"
 
 export class MainStage extends Container {}
 
@@ -24,23 +24,27 @@ export class Resources {
 
 @injectable()
 export class NoteHelper {
-    static noteInitScale = 0.5
+    static noteInitScaleX = 0.4
+    static noteInitScaleY = 0.6
     constructor(config: GameConfig) {
         this.staytime = staytime(config.speed)
-        this.noteScale = NoteHelper.noteInitScale * config.noteScale
+        this.noteScale = {
+            x: NoteHelper.noteInitScaleX * config.noteScale,
+            y: NoteHelper.noteInitScaleY * config.noteScale,
+        }
     }
 
-    noteScale: number
+    noteScale: { x: number; y: number }
     staytime: number
 
     /** pre-multiplied config note scale */
     calc(note: JudgePoint, musicTime: number) {
         const dt = musicTime - note.time
         const t = dt / this.staytime
-        return projection(t, LaneCenterXs[note.lane])
+        return projection(t, LaneCenterX(note.lane))
     }
 
-    setScale(note: Sprite, scale: number) {
-        note.scale.set(scale * this.noteScale)
+    setScale(note: Sprite, scale: number, xScale: number) {
+        note.scale.set(scale * this.noteScale.x * xScale, scale * this.noteScale.y)
     }
 }

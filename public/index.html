@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Bang player</title>
 </head>
 <body>
+    <style>
+        body{
+            margin:0;
+        }
+    </style>
     <div id="app"></div>
     <script src="./bangbangboom-game.js"></script>
     <script>
         async function loadMap() {
-            return fetch('/assets/chart.json')
+            return fetch('/assets/newchart.json')
                     .then(res=>res.json())
-                    .then(json=>json.chartData.hard)
+                    .then(json=>json.chartData.expert)
         }
         let GameConfig = {
           judgeOffset: 0,
@@ -28,7 +34,7 @@
           laneEffect: false,
           mirror: false,
           beatNote: true,
-          debug:true
+          debug:false
         }
         GameLoadConfig = {
           mapContent: loadMap,
@@ -36,7 +42,7 @@
           loadingBackgroundSrc: "/assets/loadBG.png",
           backgroundSrc: "/assets/liveBG.png",
           coverSrc: "/assets/cover.png",
-          skin: "/assets/local/sekai02",
+          skin: "/assets/sekai",
           songName: "Ringing Bloom - Hard"
         }
       

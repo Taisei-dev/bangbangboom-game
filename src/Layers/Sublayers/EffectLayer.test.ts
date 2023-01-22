@@ -7,7 +7,7 @@ import {
     LayerHeight,
     LaneBottomY,
     FarLineY,
-    LaneCenterXs,
+    LaneCenterX,
     CenterX,
     LaneInfY,
     LaneWidth,
@@ -571,11 +571,11 @@ export class TestApp extends Application {
 
         const list = [0.166, 0.23, 0.36, 0.5]
 
-        const effects = [0, 1, 2, 3, 4, 5, 6].map(x => {
+        const effects = [...Array(12).keys()].map(x => {
             const i = 3 - Math.abs(x - 3)
             const e = new LaneEffect(this.loader.resources.game.textures!["bg_line" + i], x > 3)
             e.y = LaneBottomY
-            e.x = LaneCenterXs[x]
+            e.x = LaneCenterX(x)
             e.visible = false
             e.anchor.set(list[i], 1)
             return e
@@ -594,11 +594,11 @@ export class TestApp extends Application {
             effects.forEach(x => x.update(dt))
         })
         // setInterval(() => {
-        //     layer.setEffect(LaneCenterXs[Math.floor(7 * Math.random())], LaneBottomY)
+        //     layer.setEffect(LaneCenterX(Math.floor(12 * Math.random())-6), LaneBottomY)
         // }, 1000)
         // layer.setTrackedEffect(() => {
         //     return {
-        //         x: (time - Math.floor(time)) * 100 + LaneCenterXs[3],
+        //         x: (time - Math.floor(time)) * 100 + LaneCenterX(3),
         //         y: LaneBottomY,
         //         visible: time < 5
         //     }
@@ -607,7 +607,7 @@ export class TestApp extends Application {
         setInterval(() => {
             const i = Math.floor(7 * Math.random())
             effects[i].setAnim()
-            layer.setEffect(LaneCenterXs[i], LaneBottomY)
+            layer.setEffect(LaneCenterX(i), LaneBottomY)
         }, 200)
 
         setInterval(() => {

@@ -1,3 +1,5 @@
+import { isTypeNode } from "typescript"
+
 export const LayerWidth = 1280
 export const LayerHeight = 720
 
@@ -8,10 +10,17 @@ export const LaneBottomY = LayerHeight * 0.74
 
 export const LaneWidth = 0.06 * LayerWidth
 
-export const LaneCenterXs: number[] = []
+export type Lane = {
+    l: number
+    r: number
+}
 
-for (let i = -6; i < 6; i++) {
-    LaneCenterXs.push(CenterX + i * LaneWidth + LaneWidth / 2)
+export function LaneCenterX(lane: Lane | number) {
+    if (typeof lane === "number") {
+        return CenterX + (lane - 5.5) * LaneWidth
+    } else {
+        return CenterX + ((lane.l + lane.r) / 2 - 5.5) * LaneWidth
+    }
 }
 
 export const FarLineZ = 20

@@ -32,7 +32,7 @@ export class SimLineSprite extends Sprite {
 
         const lp = this.helper.calc(this.sim.left, musicTime)
         const rp = this.helper.calc(this.sim.right, musicTime)
-        this.height = lp.scale * this.texture.height * this.helper.noteScale
+        this.height = lp.scale * this.texture.height * this.helper.noteScale.y
         this.width = lp.x - rp.x
 
         this.x = (lp.x + rp.x) / 2

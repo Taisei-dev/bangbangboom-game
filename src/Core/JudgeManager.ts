@@ -145,7 +145,8 @@ export class JudgeManager extends AbsctractJudgeManager {
                     const p = s.parent
                     const info = holdingSlides.get(p.pointerId!)
                     if (info) {
-                        if (Math.abs(findex(info.track, -1).lane - s.lane) <= 1) {
+                        const current = findex(info.track, -1)
+                        if (s.lane.l - 1 <= current.lane || current.lane <= s.lane.r + 1) {
                             // todo: care about this
                             s.judge = j
                             p.nextJudgeIndex!++
@@ -188,7 +189,7 @@ export class JudgeManager extends AbsctractJudgeManager {
                 const func = getJudgeFunction(s)
                 if (func(mt - s.time) === "perfect" && func(lastMusicTime - s.time) === undefined) {
                     const start = findex(assert(holdingSlides.get(s.parent.pointerId!)).track, -1)
-                    if (Math.abs(start.lane - s.lane) <= 1) {
+                    if (s.lane.l - 1 <= start.lane || start.lane <= s.lane.r + 1) {
                         holdingFlicks.set(s.parent.pointerId!, {
                             note: s,
                             start,
@@ -234,7 +235,9 @@ export class JudgeManager extends AbsctractJudgeManager {
             const comparator = (l: Note, r: Note) => {
                 const dt = Math.abs(l.time - mt) - Math.abs(r.time - mt)
                 if (dt) return dt
-                return Math.abs(l.lane - pointer.lane) - Math.abs(r.lane - pointer.lane)
+                const dl = Math.abs(l.lane.l - pointer.lane) - Math.abs(r.lane.l - pointer.lane)
+                if (dl) return dl
+                return Math.abs(l.lane.r - pointer.lane) - Math.abs(r.lane.r - pointer.lane)
             }
 
             const judgedNotes = new Set<Note>()
@@ -245,7 +248,7 @@ export class JudgeManager extends AbsctractJudgeManager {
                 case "down": {
                     if (pointer.lane < 0) break
                     let canDown = pool.filter(x => {
-                        if (Math.abs(x.lane - pointer.lane) > 1) return false
+                        if (pointer.lane < x.lane.l || x.lane.r < pointer.lane) return false
                         if ("parent" in x && !slideNowJudge(x)) return false
                         // holding flicks
                         if (x.type === "flick" && x.pointerId) return false
@@ -317,7 +320,7 @@ export class JudgeManager extends AbsctractJudgeManager {
                                 n.judge = "miss"
                             } else if (n.type === "slideend") {
                                 let j = getJudgeFunction(n)(mt - n.time) as Judge
-                                if (j === undefined || Math.abs(pointer.lane - n.lane) > 1) j = "miss"
+                                if (j === undefined || pointer.lane < n.lane.l || n.lane.r < pointer.lane) j = "miss"
                                 n.judge = j
                             }
                             judgedNotes.add(n)

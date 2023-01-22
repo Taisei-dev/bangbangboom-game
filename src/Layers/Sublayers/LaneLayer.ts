@@ -14,10 +14,10 @@ export class LaneLayer extends Container {
         lane.position.set(CenterX, LaneBottomY)
         this.addChild(lane)
 
-        const line = new Sprite(resources.game.textures!.play_line)
-        line.anchor.set(0.5)
-        line.position.set(CenterX, LaneBottomY)
-        this.addChild(line)
+        // const line = new Sprite(resources.game.textures!.play_line)
+        // line.anchor.set(0.5)
+        // line.position.set(CenterX, LaneBottomY)
+        // this.addChild(line)
 
         // this.cacheAsBitmap = true
     }

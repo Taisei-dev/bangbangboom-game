@@ -50,7 +50,7 @@ export class GameState {
     constructor(resources: Resources, config: GameConfig) {
         this.map = fromRawMap(resources.map.data)
         if (config.mirror) {
-            for (const n of this.map.notes) n.lane = 6 - n.lane
+            for (const n of this.map.notes) n.lane = { l: 11 - n.lane.l, r: 11 - n.lane.r }
         }
         this.musicTime = Math.min(-1, (this.map.notes[0]?.time || 0) - 5)
         this.maxScore = this.map.combo * 100

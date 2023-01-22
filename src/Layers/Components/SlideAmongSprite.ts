@@ -32,7 +32,7 @@ export class SlideAmongSprite extends Sprite {
 
         const p = this.helper.calc(this.note, musicTime)
         this.position.set(p.x, p.y)
-        this.helper.setScale(this, p.scale)
+        this.helper.setScale(this, p.scale, 1)
 
         this.zIndex = p.scale
     }

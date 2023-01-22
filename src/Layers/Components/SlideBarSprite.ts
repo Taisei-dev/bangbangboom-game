@@ -3,7 +3,7 @@ import { injectable } from "inversify"
 import { Resources, NoteHelper } from "../../Utils/SymbolClasses"
 import { SlideBar } from "../../Core/GameMap"
 import { ratio } from "../../Utils/Utils"
-import { LaneCenterXs } from "../../Core/Constants"
+import { LaneCenterX } from "../../Core/Constants"
 import { projection } from "../../Core/Projection"
 import { Matrix } from "pixi.js"
 
@@ -50,8 +50,8 @@ export class SlideBarSprite extends Sprite2d {
             this.bar.start.time,
             this.bar.end.time,
             st,
-            LaneCenterXs[this.bar.start.lane],
-            LaneCenterXs[this.bar.end.lane]
+            LaneCenterX(this.bar.start.lane),
+            LaneCenterX(this.bar.end.lane)
         )
         const startT = (musicTime - st) / this.helper.staytime
         const sp = projection(startT, startPos)
@@ -60,15 +60,15 @@ export class SlideBarSprite extends Sprite2d {
             this.bar.start.time,
             this.bar.end.time,
             et,
-            LaneCenterXs[this.bar.start.lane],
-            LaneCenterXs[this.bar.end.lane]
+            LaneCenterX(this.bar.start.lane),
+            LaneCenterX(this.bar.end.lane)
         )
         const endT = (musicTime - et) / this.helper.staytime
         const ep = projection(endT, endPos)
 
         const f = sp.scale / ep.scale
 
-        const sx = (this.helper.noteScale * sp.scale) / NoteHelper.noteInitScale
+        const sx = (this.helper.noteScale.x * sp.scale) / NoteHelper.noteInitScaleX
         const sy = ((sp.y - ep.y) / this.texture.height) * f
         this.transform.setFromMatrix(new Matrix(sx, 0, ((ep.x - sp.x) / (ep.y - sp.y)) * sy, sy, sp.x, sp.y))
 

@@ -27,9 +27,9 @@ export class IntereactionLayer extends Container {
         const getlane = (x: number, y: number) => {
             if (y < 0) return -1
             const pm = x >= 0 ? 1 : -1
-            let dl = Math.abs(x)  / LaneWidth
+            let dl = Math.abs(x) / LaneWidth
             if (dl >= 7) return -1
-            return 6.5 + pm / 2 + Math.floor(dl) * pm
+            return 5.5 + pm / 2 + Math.floor(dl) * pm
         }
 
         const typemap: any = {

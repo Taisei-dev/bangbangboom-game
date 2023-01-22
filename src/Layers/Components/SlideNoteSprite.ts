@@ -1,6 +1,6 @@
 import { Sprite } from "pixi.js"
 import { Resources, NoteHelper } from "../../Utils/SymbolClasses"
-import { SlideEnd, SlideStart } from "../../Core/GameMap"
+import { SlideEnd, SlideStart, Lane } from "../../Core/GameMap"
 import { injectable } from "inversify"
 
 @injectable()
@@ -11,7 +11,7 @@ export class SlideNoteSprite extends Sprite {
         this.visible = false
     }
 
-    setTexture(lane: number) {
+    setTexture(lane: Lane) {
         this.texture = this.resource.game.textures!["slide"]
     }
 
@@ -37,7 +37,7 @@ export class SlideNoteSprite extends Sprite {
 
         const p = this.helper.calc(this.note, musicTime)
         this.position.set(p.x, p.y)
-        this.helper.setScale(this, p.scale)
+        this.helper.setScale(this, p.scale, this.note.lane.r - this.note.lane.l)
 
         this.zIndex = p.scale
     }

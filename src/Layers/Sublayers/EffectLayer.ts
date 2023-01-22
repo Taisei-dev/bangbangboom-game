@@ -6,7 +6,7 @@ import { InfoEffect } from "../../Common/InfoObject/InfoEffect"
 import { GameState } from "../../Core/GameState"
 import { Slide } from "../../Core/GameMap"
 import { ratio, findex, ObjectPool } from "../../Utils/Utils"
-import { LaneCenterXs, LaneBottomY, LayerWidth, LayerHeight } from "../../Core/Constants"
+import { LaneCenterX, LaneBottomY, LayerWidth, LayerHeight } from "../../Core/Constants"
 import { GameConfig } from "../../Core/GameConfig"
 
 type EffectLayerInfo = {
@@ -77,7 +77,7 @@ function GetSlidePos(note: Slide, musicTime: number) {
     const i = note.nextJudgeIndex || 1
     const n1 = note.notes[i - 1]
     const n2 = note.notes[i]
-    return ratio(n1.time, n2.time, musicTime, LaneCenterXs[n1.lane], LaneCenterXs[n2.lane])
+    return ratio(n1.time, n2.time, musicTime, LaneCenterX(n1.lane), LaneCenterX(n2.lane))
 }
 
 @injectable()
@@ -103,9 +103,9 @@ export class EffectLayer extends Container {
                 return
             }
             if (n.type === "flick" || n.type === "flickend") {
-                flick.setEffect(LaneCenterXs[n.lane], LaneBottomY)
+                flick.setEffect(LaneCenterX(n.lane), LaneBottomY)
             } else {
-                single.setEffect(LaneCenterXs[n.lane], LaneBottomY)
+                single.setEffect(LaneCenterX(n.lane), LaneBottomY)
             }
             if (n.type !== "single" && n.type !== "flick") {
                 if (slides.has(n.parent)) {
@@ -128,7 +128,7 @@ export class EffectLayer extends Container {
         })
 
         state.on.emptyTap.add((remove, l) => {
-            if (0 <= l && l <= 6) tap.setEffect(LaneCenterXs[l], LaneBottomY)
+            if (-6 <= l && l < 6) tap.setEffect(LaneCenterX(l), LaneBottomY)
         })
 
         state.on.fullCombo.add(() => {
