@@ -24,7 +24,7 @@ export class Resources {
 
 @injectable()
 export class NoteHelper {
-    static noteInitScaleX = 0.4
+    static noteInitScaleX = 0.42
     static noteInitScaleY = 0.6
     constructor(config: GameConfig) {
         this.staytime = staytime(config.speed)

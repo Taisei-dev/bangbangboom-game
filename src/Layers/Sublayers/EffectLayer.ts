@@ -4,7 +4,7 @@ import { EffectInfo } from "../../Common/InfoObject/InfoType"
 import { Resources, GlobalEvents } from "../../Utils/SymbolClasses"
 import { InfoEffect } from "../../Common/InfoObject/InfoEffect"
 import { GameState } from "../../Core/GameState"
-import { Slide } from "../../Core/GameMap"
+import { Slide, SlideBar } from "../../Core/GameMap"
 import { ratio, findex, ObjectPool } from "../../Utils/Utils"
 import { LaneCenterX, LaneBottomY, LayerWidth, LayerHeight } from "../../Core/Constants"
 import { GameConfig } from "../../Core/GameConfig"
@@ -73,10 +73,9 @@ export class SingleEffectLayer extends Container {
     }
 }
 
-function GetSlidePos(note: Slide, musicTime: number) {
-    const i = note.nextJudgeIndex || 1
-    const n1 = note.notes[i - 1]
-    const n2 = note.notes[i]
+function GetSlidePos(note: SlideBar, musicTime: number) {
+    const n1 = note.start
+    const n2 = note.end
     return ratio(n1.time, n2.time, musicTime, LaneCenterX(n1.lane), LaneCenterX(n2.lane))
 }
 
@@ -107,7 +106,7 @@ export class EffectLayer extends Container {
             } else {
                 single.setEffect(LaneCenterX(n.lane), LaneBottomY)
             }
-            if (n.type !== "single" && n.type !== "flick") {
+            if (n.type !== "single" && n.type !== "flick" && n.type !== "slideamong") {
                 if (slides.has(n.parent)) {
                     if (n.type === "slideend" || n.type === "flickend") slides.delete(n.parent)
                 } else {
@@ -115,10 +114,9 @@ export class EffectLayer extends Container {
                     slide.setTrackedEffect(() => {
                         const p = n.parent
                         const mt = state.on.musicTimeUpdate.prevArgs[0].visualTime
-                        const visible =
-                            p.nextJudgeIndex! < p.notes.length && slides.has(p) && findex(p.notes, -1).time >= mt
+                        const visible = !p.end.judge && slides.has(p) && p.end.time >= mt
                         return {
-                            x: (visible && GetSlidePos(p, mt)) || 0,
+                            x: (visible && GetSlidePos(p.bars[0], mt)) || 0,
                             y: LaneBottomY,
                             visible,
                         }

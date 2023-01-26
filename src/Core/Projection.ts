@@ -6,7 +6,7 @@ import { CenterX, FarLineZ, LaneInfY, LaneBottomY } from "./Constants"
  * @returns 0 -> 1, ratio of y
  */
 function fall(t: number) {
-    return Math.pow(1.1, 50 * t)
+    return Math.pow(1.08, 60 * t)
 }
 
 /**

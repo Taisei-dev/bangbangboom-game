@@ -5,7 +5,7 @@ import { SlideBar } from "../../Core/GameMap"
 import { ratio } from "../../Utils/Utils"
 import { LaneCenterX } from "../../Core/Constants"
 import { projection } from "../../Core/Projection"
-import { Matrix } from "pixi.js"
+import { filters, Matrix } from "pixi.js"
 
 @injectable()
 export class SlideBarSprite extends Sprite2d {
@@ -29,16 +29,24 @@ export class SlideBarSprite extends Sprite2d {
         if (!this.visible || this.shouldRemove || !this.bar) return
 
         let st = this.bar.start.time
-        if (st < musicTime && this.bar.start.parent.pointerId) st = musicTime
+        if (st < musicTime && this.bar.parent.holded) st = musicTime
         let et = this.bar.end.time
         if (et > musicTime + this.helper.staytime) et = musicTime + this.helper.staytime
 
+        if (this.bar.parent.start.time <= musicTime && !this.bar.parent.holded) {
+            const matrix = new filters.ColorMatrixFilter()
+            matrix.brightness(0.5, false)
+            this.filters = [matrix]
+        } else {
+            this.filters = []
+        }
+
         if (
             this.bar.end.judge ||
-            this.bar.start.judge === "miss" ||
+            /*this.bar.start.judge === "miss" ||*/
             st >= et ||
-            musicTime > this.bar.end.time + 1 ||
-            (!this.bar.start.parent.pointerId && musicTime > this.bar.start.time + 1)
+            musicTime > this.bar.end.time + 1 /*||
+            (!this.bar.start.parent.pointerId && musicTime > this.bar.start.time + 1)*/
         ) {
             this.shouldRemove = true
             this.visible = false

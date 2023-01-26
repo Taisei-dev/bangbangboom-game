@@ -17,9 +17,9 @@
     <script src="./bangbangboom-game.js"></script>
     <script>
         async function loadMap() {
-            return fetch('/assets/newchart.json')
+            return fetch('/assets/shoshitsu-ex.json')
                     .then(res=>res.json())
-                    .then(json=>json.chartData.expert)
+                    .then(json=>json)
         }
         let GameConfig = {
           judgeOffset: 0,
@@ -38,12 +38,12 @@
         }
         GameLoadConfig = {
           mapContent: loadMap,
-          musicSrc: "/assets/audio.mp3",
+          musicSrc: "/assets/0049_01.mp3",
           loadingBackgroundSrc: "/assets/loadBG.png",
           backgroundSrc: "/assets/liveBG.png",
           coverSrc: "/assets/cover.png",
           skin: "/assets/sekai",
-          songName: "Ringing Bloom - Hard"
+          songName: "初音ミクの消失 - Expert"
         }
       
         function GameStart() {

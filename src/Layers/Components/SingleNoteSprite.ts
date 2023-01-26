@@ -13,7 +13,7 @@ export class SingleNoteSprite extends Sprite {
     }
 
     setTexture(lane: Lane) {
-        if (!this.note?.onbeat && this.config.beatNote) this.texture = this.resource.game.textures!["critical"]
+        if (!this.note?.critical && this.config.beatNote) this.texture = this.resource.game.textures!["critical"]
         else this.texture = this.resource.game.textures!["single"]
     }
 

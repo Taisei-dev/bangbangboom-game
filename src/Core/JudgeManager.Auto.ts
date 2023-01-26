@@ -24,12 +24,12 @@ export class AutoJudgeManager extends AbsctractJudgeManager {
                 const note = list[i]
                 note.judge = "perfect"
                 if (note.type === "slidestart") {
-                    note.parent.pointerId = 1
-                    note.parent.nextJudgeIndex = 1
+                    note.parent.holded = true
+                    //note.parent.nextJudgeIndex = 1
                 } else if (note.type === "slideamong") {
-                    note.parent.nextJudgeIndex!++
+                    //note.parent.nextJudgeIndex!++
                 } else if (note.type === "slideend" || note.type === "flickend") {
-                    note.parent.pointerId = 0
+                    note.parent.holded = false
                 }
                 state.on.judge.emit(note)
                 i++

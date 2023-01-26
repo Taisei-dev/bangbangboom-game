@@ -49,9 +49,8 @@ export class LoadingLayer extends Container {
     constructor(events: GlobalEvents, config: GameLoadConfig) {
         super()
 
-        const backimage=Texture.from(config.loadingBackgroundSrc)
-        const back=new Sprite(backimage)
-        console.log(backimage.width)
+        const backimage = Texture.from(config.loadingBackgroundSrc)
+        const back = new Sprite(backimage)
         back.scale.set(2.2)
         this.addChild(back)
 
@@ -77,11 +76,9 @@ export class LoadingLayer extends Container {
 
         const textanim = this.setTextAnim(text, events.Update)
 
-
         let lastProg = 0
         events.Update.add((remove, dt) => {
             if (!this.parent) return remove()
-
 
             textanim.update(dt)
 
