@@ -3,24 +3,14 @@ import { findex } from "../Utils/Utils"
 import { Judge, Lane } from "./Constants"
 export { Lane } from "./Constants"
 import { PointerEventInfo } from "./GameState"
-
-export type NoteBase = {
-    /** real time from music starts */
-    time: number
-    /** left: 0 ---- right : 11 */
-    lane: Lane
-}
+import { ParticleOption } from "../Common/ParticleEmitter"
 
 export type JudgePoint = {
     /** real time from music start */
     time: number
-    /** the first on the left is 0 */
+    /** left: 0 ---- right : 11 */
     lane: Lane
 
-    // judgeType?: {
-    //     canDown: () => boolean
-    //     canUp: () => boolean
-    // }
     judge?: Judge
 }
 
@@ -38,12 +28,7 @@ export type Flick = {
 
 export type Slide = {
     type: "slide"
-    //flickend: boolean
-    //long?: boolean
-    //nextJudgeIndex?: number
-    //pointerId?: number
     holded?: boolean
-    //notes: Array<SlideStart | SlideAmong | SlideEnd | SlideFlickEnd>
     start: SlideStart
     bars: SlideBar[]
     end: SlideEnd | SlideFlickEnd
@@ -99,80 +84,15 @@ export type GameMap = {
     combo: number
 }
 
-function comparator(a: NoteBase, b: NoteBase) {
+function comparator(a: JudgePoint, b: JudgePoint) {
     return a.time - b.time || a.lane.l - b.lane.l || a.lane.r - b.lane.r
 }
 
-// export function fromRawMap(map: RawMap.RawMap): GameMap {
-//     map.notes = map.notes.sort(comparator)
-//     const slideset = new Map<number, Slide>()
-//     const slidenotes = new Map<number, RawMap.NoteType[]>()
-//     for (const n of map.notes) {
-//         if (n.type === "slide") {
-//             const list = slidenotes.get(n.slideid)
-//             if (!list) slidenotes.set(n.slideid, [n])
-//             else list.push(n)
-//         }
-//     }
-//     const notes: Note[] = []
-//     const simlines: SimLine[] = []
-//     const bars: SlideBar[] = []
-//     const timeMap = new Map<number, Note>()
-//     for (const n of map.notes) {
-//         if (n.type !== "slide") {
-//             notes.push({ ...n })
-//         } else {
-//             const s = slideset.get(n.slideid)||{
-//                 type: "slide",
-//                 flickend: false,
-//                 start:{},
-//                 end:n
-//             }
-//             //if (!s)throw new Error("Can not find slide for note")
-//             const l = slidenotes.get(n.slideid)
-//             if (!l) throw new Error("Never happens")
-//             if (l.length < 2) throw new Error("Slide can not have less than 2 notes")
-//             // slides may includes overlapping
-//             const m = slidenotes.get(n.slideid - 1)
-//             if (m && !comparator(m[0], l[0])) continue
-//             if (n === l[0]) {
-//                 notes.push({ type: "slidestart", parent: s, time: n.time, lane: n.lane })
-//                 const start = findex(notes, -1) as SlideStart
-//                 s.start=start
-//             } else {
-//                 if (n === l[l.length - 1]) {
-//                     if (s.flickend) notes.push({ type: "flickend", parent: s, time: n.time, lane: n.lane })
-//                     else notes.push({ type: "slideend", parent: s, time: n.time, lane: n.lane })
-//                     s.end=findex(notes,-1) as SlideEnd
-//                 } else notes.push({ type: "slideamong", time: n.time, lane: n.lane })
-//                 const start = s.start
-//                 const end = s.end
-//                 //s.notes.push(end)
-//                 bars.push({ type: "slidebar", parent: s, start:start as JudgePoint, end:end as JudgePoint })
-//             }
-//         }
-//         const right = findex(notes, -1)!
-//         if (right.type !== "slideamong") {
-//             const left = timeMap.get(n.time)
-//             if (left) {
-//                 simlines.push({ type: "simline", left, right })
-//             }
-//             timeMap.set(n.time, right)
-//         }
-//     }
-//     notes.sort(comparator)
-//     simlines.sort((a, b) => comparator(a.left, b.left))
-//     bars.sort((a, b) => comparator(a.start, b.start))
-
-//     return { notes, bars, simlines, combo: notes.length }
-// }
-
 export function fromRawMap(map: RawMap.RawMap): GameMap {
-    let notes: Array<Note> = []
-    let bars: Array<SlideBar> = []
-    let simlines: Array<SimLine> = []
+    let mainnotes: Array<Note> = []
+    let slideamongs: Array<Note> = []
 
-    let slides: Array<Slide> = []
+    let slideElements: Array<Omit<SlideStart | SlideBar | SlideEnd | SlideFlickEnd, "parent">> = []
 
     const bgmOffset = map.bgmOffset
 
@@ -188,7 +108,7 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
         switch (entity.archetype) {
             case 3:
             case 10:
-                notes.push({
+                mainnotes.push({
                     type: "single",
                     critical: entity.archetype >= 10,
                     ...judgepoint,
@@ -196,7 +116,7 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
                 break
             case 4:
             case 11:
-                notes.push({
+                mainnotes.push({
                     type: "flick",
                     critical: entity.archetype >= 10,
                     ...judgepoint,
@@ -204,16 +124,51 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
                 break
             case 5:
             case 12:
-                let slidestart: any = {
+                let slidestart: Omit<SlideStart, "parent"> = {
                     type: "slidestart",
                     critical: entity.archetype >= 10,
                     ...judgepoint,
                 }
+                slideElements.push(slidestart)
+                break
+            case 9:
+            case 16:
+                let slidebar: Omit<SlideBar, "parent"> = {
+                    type: "slidebar",
+                    critical: entity.archetype >= 10,
+                    start: judgepoint,
+                    end: {
+                        time: entity.data!.values[3] + bgmOffset,
+                        lane: {
+                            l: Math.round(6 + entity.data!.values[4] - entity.data!.values[5]),
+                            r: Math.round(5 + entity.data!.values[4] + entity.data!.values[5]),
+                        },
+                    },
+                }
+                slideElements.push(slidebar)
+                break
+            case 7:
+            case 14:
+                let slideend: Omit<SlideEnd, "parent"> = {
+                    type: "slideend",
+                    critical: entity.archetype >= 10,
+                    ...judgepoint,
+                }
+                slideElements.push(slideend)
+                break
+            case 8:
+            case 15:
+                let flickend: Omit<SlideFlickEnd, "parent"> = {
+                    type: "flickend",
+                    critical: entity.archetype >= 10,
+                    ...judgepoint,
+                }
+                slideElements.push(flickend)
                 break
             case 6:
             case 13:
             case 17:
-                notes.push({
+                slideamongs.push({
                     type: "slideamong",
                     critical: entity.archetype >= 10,
                     hidden: entity.archetype === 17,
@@ -222,9 +177,71 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
                 break
         }
     })
-    notes.sort(comparator)
+    //set slide
+    let slideTemp: Array<Array<Omit<SlideStart | SlideBar | SlideEnd | SlideFlickEnd, "parent">>> = []
+    for (let slidestart of slideElements.filter(slideEl => slideEl.type === "slidestart")) {
+        slideTemp.push([slidestart])
+    }
+    for (let slidebar of slideElements.filter(slideEl => slideEl.type === "slidebar")) {
+        slideTemp
+            .find(slideElArray => {
+                let end = slideElArray[slideElArray.length - 1]
+                let point1 = end.type === "slidebar" ? (end as SlideBar).end : (end as SlideStart)
+                let point2 = (slidebar as SlideBar).start
+                return point1.time === point2.time && point1.lane.r === point2.lane.r && point1.lane.l === point2.lane.l
+            })
+            ?.push(slidebar)
+    }
+    for (let slideend of slideElements.filter(slideEl => slideEl.type === "slideend" || slideEl.type === "flickend")) {
+        slideTemp
+            .find(slideElArray => {
+                let end = slideElArray[slideElArray.length - 1]
+                let point1 = end.type === "slidebar" ? (end as SlideBar).end : (end as SlideStart)
+                let point2 = slideend as SlideEnd | SlideFlickEnd
+                return point1.time === point2.time && point1.lane.r === point2.lane.r && point1.lane.l === point2.lane.l
+            })
+            ?.push(slideend)
+    }
+
+    let slides: Array<Slide> = []
+    let bars: Array<SlideBar> = []
+    for (let slideElArray of slideTemp) {
+        let slide: any = {}
+        slide.type = "slide"
+        slide.start = { ...slideElArray[0], parent: slide }
+        slide.end = { ...slideElArray[slideElArray.length - 1], parent: slide }
+        slide.bars = (slideElArray.filter(el => el.type === "slidebar") as Array<SlideBar>)
+            .map(bar => {
+                return { ...bar, parent: slide }
+            })
+            .sort((a: SlideBar, b: SlideBar) => comparator(a.start, b.start))
+        slides.push(slide as Slide)
+    }
+    console.log("slideTemp", slideTemp)
+    console.log("slides", slides)
+
+    for (let slide of slides) {
+        bars.push(...slide.bars)
+        mainnotes.push(slide.start, slide.end)
+    }
+
+    // set simline
+    let simlines: Array<SimLine> = []
+    mainnotes.sort(comparator)
+    for (let i = 0; i < mainnotes.length - 1; i++) {
+        if (mainnotes[i].time === mainnotes[i + 1].time) {
+            simlines.push({
+                type: "simline",
+                left: mainnotes[i] as JudgePoint,
+                right: mainnotes[i + 1] as JudgePoint,
+            })
+        }
+    }
+
+    let notes: Array<Note> = [...mainnotes, ...slideamongs].sort(comparator)
     simlines.sort((a, b) => comparator(a.left, b.left))
     bars.sort((a, b) => comparator(a.start, b.start))
+
     console.log({ notes, bars, simlines, combo: notes.length })
     return { notes, bars, simlines, combo: notes.length }
 }
