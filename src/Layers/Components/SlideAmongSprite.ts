@@ -1,14 +1,22 @@
 import { Sprite } from "pixi.js"
 import { Resources, NoteHelper } from "../../Utils/SymbolClasses"
-import { SlideAmong } from "../../Core/GameMap"
+import { Slide, SlideAmong } from "../../Core/GameMap"
 import { injectable } from "inversify"
 
 @injectable()
 export class SlideAmongSprite extends Sprite {
-    constructor(resource: Resources, private helper: NoteHelper) {
-        super(resource.game.textures?.slide_among)
+    constructor(private resource: Resources, private helper: NoteHelper) {
+        super()
         this.anchor.set(0.5)
         this.visible = false
+    }
+
+    setTexture(note: SlideAmong) {
+        if (note.critical) {
+            this.texture = this.resource.game.textures!["slide_among_critical"]
+        } else if (!note.hidden) {
+            this.texture = this.resource.game.textures!["slide_among"]
+        }
     }
 
     note?: SlideAmong
@@ -16,6 +24,7 @@ export class SlideAmongSprite extends Sprite {
 
     applyInfo(note: SlideAmong) {
         this.note = note
+        this.setTexture(note)
         this.shouldRemove = false
         this.visible = true
     }

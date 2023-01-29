@@ -12,8 +12,8 @@ export class SingleNoteSprite extends Sprite {
         this.visible = false
     }
 
-    setTexture(lane: Lane) {
-        if (this.note?.critical) this.texture = this.resource.game.textures!["critical"]
+    setTexture(note: Single) {
+        if (note.critical) this.texture = this.resource.game.textures!["critical"]
         else this.texture = this.resource.game.textures!["single"]
     }
 
@@ -22,7 +22,7 @@ export class SingleNoteSprite extends Sprite {
 
     applyInfo(note: Single) {
         this.note = note
-        this.setTexture(note.lane)
+        this.setTexture(note)
         this.shouldRemove = false
         this.visible = true
     }
@@ -39,7 +39,7 @@ export class SingleNoteSprite extends Sprite {
 
         const p = this.helper.calc(this.note, musicTime)
         this.position.set(p.x, p.y)
-        this.helper.setScale(this, p.scale, this.note.lane.r - this.note.lane.l)
+        this.helper.setScale(this, p.scale, this.note.lane.r - this.note.lane.l + 1)
 
         this.zIndex = p.scale
     }

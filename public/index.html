@@ -18,7 +18,7 @@
     <script src="./gunzip.min.js"></script>
     <script>
         async function loadMap() {
-            return fetch('/assets/data')
+            return fetch('/assets/0227_01.gz')
                     .then(res=>res.arrayBuffer())
                     .then(buffer=>{return new Zlib.Gunzip(new Uint8Array(buffer))})
                     .then(gunzip=>{return gunzip.decompress()})
@@ -41,7 +41,7 @@
         }
         GameLoadConfig = {
           mapContent: loadMap,
-          musicSrc: "/assets/0001_01.mp3",
+          musicSrc: "/assets/0227_01.mp3",
           loadingBackgroundSrc: "/assets/loadBG.png",
           backgroundSrc: "/assets/liveBG.png",
           coverSrc: "/assets/cover.png",

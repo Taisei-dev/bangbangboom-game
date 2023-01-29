@@ -9,11 +9,19 @@ import { filters, Matrix } from "pixi.js"
 
 @injectable()
 export class SlideBarSprite extends Sprite2d {
-    constructor(resources: Resources, private helper: NoteHelper) {
-        super(resources.game.textures?.slide_bar)
+    constructor(private resource: Resources, private helper: NoteHelper) {
+        super(resource.game.textures?.slide_bar)
         this.scale.set(0.2)
         this.anchor.set(0.5, 1)
         this.visible = false
+    }
+
+    setTexture(bar: SlideBar) {
+        if (bar.critical) {
+            this.texture = this.resource.game.textures!["slide_bar_critical"]
+        } else {
+            this.texture = this.resource.game.textures!["slide_bar"]
+        }
     }
 
     shouldRemove = false
@@ -21,6 +29,7 @@ export class SlideBarSprite extends Sprite2d {
 
     applyInfo(bar: SlideBar) {
         this.bar = bar
+        this.setTexture(bar)
         this.visible = true
         this.shouldRemove = false
     }
@@ -61,7 +70,7 @@ export class SlideBarSprite extends Sprite2d {
             LaneCenterX(this.bar.start.lane),
             LaneCenterX(this.bar.end.lane)
         )
-        const startT = (musicTime - st) / this.helper.staytime
+        const startT = (st - musicTime) / this.helper.staytime
         const sp = projection(startT, startPos)
 
         const endPos = ratio(
@@ -71,7 +80,7 @@ export class SlideBarSprite extends Sprite2d {
             LaneCenterX(this.bar.start.lane),
             LaneCenterX(this.bar.end.lane)
         )
-        const endT = (musicTime - et) / this.helper.staytime
+        const endT = (et - musicTime) / this.helper.staytime
         const ep = projection(endT, endPos)
 
         const f = sp.scale / ep.scale

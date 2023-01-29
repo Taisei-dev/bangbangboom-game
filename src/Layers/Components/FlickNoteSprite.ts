@@ -18,9 +18,34 @@ export class FlickNoteSprite extends Sprite {
 
     private top: Sprite
 
-    setTexture(lane: Lane) {
-        this.texture = this.resource.game.textures!["flick"]
-        this.top.texture = this.resource.game.textures!.flick_top
+    setTexture(note: Flick | SlideFlickEnd) {
+        if (note.critical) {
+            this.texture = this.resource.game.textures!["critical"]
+            if (note.direction === "up") {
+                this.top.texture =
+                    this.resource.game.textures![
+                        "flick_top_critical_" + (Math.ceil((note.lane.r - note.lane.l + 1) / 2) * 2 - 1)
+                    ]
+            } else {
+                this.top.texture =
+                    this.resource.game.textures![
+                        "flick_top_directional_critical_" + (Math.ceil((note.lane.r - note.lane.l + 1) / 2) * 2 - 1)
+                    ]
+            }
+        } else {
+            this.texture = this.resource.game.textures!["flick"]
+            if (note.direction === "up") {
+                this.top.texture =
+                    this.resource.game.textures![
+                        "flick_top_" + (Math.ceil((note.lane.r - note.lane.l + 1) / 2) * 2 - 1)
+                    ]
+            } else {
+                this.top.texture =
+                    this.resource.game.textures![
+                        "flick_top_directional_" + (Math.ceil((note.lane.r - note.lane.l + 1) / 2) * 2 - 1)
+                    ]
+            }
+        }
     }
 
     note?: Flick | SlideFlickEnd
@@ -28,7 +53,7 @@ export class FlickNoteSprite extends Sprite {
 
     applyInfo(note: Flick | SlideFlickEnd) {
         this.note = note
-        this.setTexture(note.lane)
+        this.setTexture(note)
         this.top.scale.set(3 / (this.note.lane.r - this.note.lane.l), 2)
         this.shouldRemove = false
         this.visible = true
@@ -46,7 +71,11 @@ export class FlickNoteSprite extends Sprite {
 
         const p = this.helper.calc(this.note, musicTime)
         this.position.set(p.x, p.y)
-        this.helper.setScale(this, p.scale, this.note.lane.r - this.note.lane.l)
+        this.helper.setScale(
+            this,
+            p.scale,
+            (this.note.lane.r - this.note.lane.l + 1) * (this.note.direction === "right" ? -1 : 1)
+        )
 
         this.top.y = Math.sin(musicTime * 10) * 30 - 30
         this.zIndex = p.scale
