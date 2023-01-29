@@ -2,11 +2,11 @@ import { CenterX, FarLineZ, LaneInfY, LaneBottomY } from "./Constants"
 
 /**
  * fall function
- * @param t 0: near, -1: far
+ * @param t 0: near, 1: far
  * @returns 0 -> 1, ratio of y
  */
 function fall(t: number) {
-    return Math.pow(1.08, 60 * t)
+    return Math.pow(1.06, -45 * t)
 }
 
 /**

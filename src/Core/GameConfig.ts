@@ -97,5 +97,5 @@ export const soundNames = {
 }
 
 export function staytime(speed: number) {
-    return 5.5 - (speed - 1) / 2
+    return 0.35 + (4 - 0.35) * Math.pow((12 - speed) / 11, 1.31)
 }

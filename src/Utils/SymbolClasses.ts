@@ -24,7 +24,7 @@ export class Resources {
 
 @injectable()
 export class NoteHelper {
-    static noteInitScaleX = 0.42
+    static noteInitScaleX = 0.38
     static noteInitScaleY = 0.6
     constructor(config: GameConfig) {
         this.staytime = staytime(config.speed)
@@ -39,7 +39,7 @@ export class NoteHelper {
 
     /** pre-multiplied config note scale */
     calc(note: JudgePoint, musicTime: number) {
-        const dt = musicTime - note.time
+        const dt = note.time - musicTime
         const t = dt / this.staytime
         return projection(t, LaneCenterX(note.lane))
     }

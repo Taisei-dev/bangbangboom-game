@@ -24,6 +24,7 @@ export type Flick = {
     //pointerId?: number
     start?: PointerEventInfo
     critical: boolean
+    direction: "up" | "right" | "left"
 } & JudgePoint
 
 export type Slide = {
@@ -57,6 +58,7 @@ export type SlideFlickEnd = {
     parent: Slide
     start?: PointerEventInfo
     critical: boolean
+    direction: "up" | "right" | "left"
 } & JudgePoint
 
 export type SimLine = {
@@ -71,6 +73,7 @@ export type SlideBar = {
     start: JudgePoint
     end: JudgePoint
     critical: boolean
+    ease: "none" | "in" | "out"
 }
 
 export type MainNote = Single | Flick | SlideStart | SlideEnd | SlideFlickEnd
@@ -119,6 +122,7 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
                 mainnotes.push({
                     type: "flick",
                     critical: entity.archetype >= 10,
+                    direction: entity.data!.values[3] === -1 ? "up" : entity.data!.values[3] === 0 ? "left" : "right",
                     ...judgepoint,
                 })
                 break
@@ -144,6 +148,7 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
                             r: Math.round(5 + entity.data!.values[4] + entity.data!.values[5]),
                         },
                     },
+                    ease: entity.data!.values[6] === -1 ? "none" : entity.data!.values[6] === 0 ? "in" : "out",
                 }
                 slideElements.push(slidebar)
                 break
@@ -161,6 +166,7 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
                 let flickend: Omit<SlideFlickEnd, "parent"> = {
                     type: "flickend",
                     critical: entity.archetype >= 10,
+                    direction: entity.data!.values[3] === -1 ? "up" : entity.data!.values[3] === 0 ? "left" : "right",
                     ...judgepoint,
                 }
                 slideElements.push(flickend)
@@ -217,8 +223,8 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
             .sort((a: SlideBar, b: SlideBar) => comparator(a.start, b.start))
         slides.push(slide as Slide)
     }
-    console.log("slideTemp", slideTemp)
-    console.log("slides", slides)
+    //console.log("slideTemp", slideTemp)
+    //console.log("slides", slides)
 
     for (let slide of slides) {
         bars.push(...slide.bars)
@@ -242,6 +248,6 @@ export function fromRawMap(map: RawMap.RawMap): GameMap {
     simlines.sort((a, b) => comparator(a.left, b.left))
     bars.sort((a, b) => comparator(a.start, b.start))
 
-    console.log({ notes, bars, simlines, combo: notes.length })
+    //console.log({ notes, bars, simlines, combo: notes.length })
     return { notes, bars, simlines, combo: notes.length }
 }

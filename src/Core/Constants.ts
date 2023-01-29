@@ -5,8 +5,8 @@ export const LayerHeight = 720
 
 export const CenterX = LayerWidth / 2
 
-export const LaneInfY = -5
-export const LaneBottomY = LayerHeight * 0.74
+export const LaneInfY = -30
+export const LaneBottomY = LayerHeight * 0.8
 
 export const LaneWidth = 0.06 * LayerWidth
 
@@ -23,7 +23,7 @@ export function LaneCenterX(lane: Lane | number) {
     }
 }
 
-export const FarLineZ = 20
+export const FarLineZ = 100
 export const FarLineY = (LaneBottomY - LaneInfY) / FarLineZ + LaneInfY
 
 export type Judge = "perfect" | "great" | "good" | "bad" | "miss"
